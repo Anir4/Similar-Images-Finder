@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class ImageClassifier {
@@ -26,8 +27,8 @@ public class ImageClassifier {
 			File folder = new File("coil-100");
 			int count = 0;
 			for(File file: Objects.requireNonNull(folder.listFiles())) {
-				if(++count > 100)
-					break;
+//				if(++count > 100)
+//					break;
 				BufferedImage img = ImageIO.read(file);
 				images.add(img);
 				imageNames.add(file.getName());
@@ -65,7 +66,7 @@ public class ImageClassifier {
 		return res;
 	}
 
-	public void findSimilar(BufferedImage img) {
+	public ArrayList<String> findSimilar(BufferedImage img) {
 		double[] distances = getDistances(img);
 		HashMap<Integer, Double> mp = new HashMap<>();
 		double mean = 0;
@@ -93,12 +94,19 @@ public class ImageClassifier {
 		System.out.println("Mean(distances) = " + mean);
 		System.out.println("\n\tAN IMAGE IS SELECTED IF THE DISTANCE IS LOWER THAN 0.5\n");
 
+		int count = 0;
+		ArrayList<String> similar = new ArrayList<>();
 		for(Map.Entry<Integer, Double> en : s) {
 			//if(en.getValue() > 0.5)
 			//	break;
 			System.out.println("ImageName = " + imageNames.get(en.getKey()) + ", Dist = " + en.getValue());
+			similar.add(imageNames.get(en.getKey()));
+			count++;
+			if(count >= 30)
+				break;
 		}
 
+		return similar;
 	}
 
 
